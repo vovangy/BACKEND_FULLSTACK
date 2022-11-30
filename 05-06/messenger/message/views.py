@@ -12,7 +12,6 @@ from django.views.decorators.csrf import csrf_exempt
 @csrf_exempt
 @require_http_methods(['POST'])
 def create_message(request):
-    flag = 1
     data = json.loads(request.body)
     if ("user" not in data.keys() or "chat" not in data.keys() or "text" not in data.keys()):
         return JsonResponse({'Error': "not chat or user or text in the passed arguments"})
@@ -21,7 +20,7 @@ def create_message(request):
     user = get_object_or_404(User, id=data["user"])
     chat = get_object_or_404(Chat, chat_id=data["chat"])
     message = Message.objects.create(message_id = len(Message.objects.all()) + 1, user = user, chat = chat, text = data["text"])
-    return JsonResponse({'Message created': flag})
+    return JsonResponse({'Message created': 1}, status=201)
 
 
 @csrf_exempt
@@ -29,7 +28,7 @@ def create_message(request):
 def edit_message(request):
     data = json.loads(request.body)
     if "message_id" not in data.keys():
-        return JsonResponse(status=400, data={"Error": "No message_id"})
+        return JsonResponse({"Error": "not message_id in the passed arguments"}, status=400)
     if (not str(data["message_id"]).isdigit()):
         return JsonResponse({'Error': "message_id must be digit"}, status=400)
     message = get_object_or_404(Message, message_id= data["message_id"])

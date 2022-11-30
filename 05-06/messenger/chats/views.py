@@ -36,7 +36,7 @@ def delete_chat(request):
         return JsonResponse({'Error': "chat_id must be digit"}, status=400)
     chat = get_object_or_404(Chat, chat_id=data["chat_id"])
     chat.delete()
-    return JsonResponse({'Chat deleted': 1}, status=200)
+    return JsonResponse({'Chat deleted': 1}, status=201)
 @require_http_methods(['GET'])
 def chat_info(request):
     data = json.loads(request.body)
@@ -51,18 +51,15 @@ def chat_info(request):
         result_chat["users"].append(list((i.id, i.username)))
     return JsonResponse({'Chat': result_chat})
 
-
-@csrf_exempt
 @require_http_methods(['GET'])
 def view_list_chats(request):
     chats = {}
-    for i in Chat.objects.all():
-        users = Chat.objects.get(chat_id = i.chat_id).users.all()
-        chats[i.chat_id] = ([i.chat_id, i.photo, list()])
-        for j in users:
-            chats[i.chat_id][-1].append(list((j.id, j.username)))
-
-    return JsonResponse(chats)# Create your views here.
+    for chat in Chat.objects.all():
+        users = Chat.objects.get(chat_id = chat.chat_id).users.all()
+        chats[chat.chat_id] = ([chat.chat_id, chat.photo, list()])
+        for user in users:
+            chats[user.chat_id][-1].append(list((user.id, user.username)))
+    return JsonResponse({"Chats":chats}, status=200)# Create your views here.
 
 @require_http_methods(['GET'])
 def chat_messages(request):
@@ -114,8 +111,8 @@ def append_chat_user(request):
     chat = get_object_or_404(Chat, chat_id=data["chat_id"])
     user = get_object_or_404(User, id=data["user_id"])
     users = Chat.objects.get(chat_id=data["chat_id"]).users.all()
-    for i in users:
-        if i.id == user.id:
+    for usr in users:
+        if usr.id == usr.id:
             return JsonResponse({'Error': "Such user already exists"}, status=200)
     chat.users.add(user)
     return JsonResponse({'User appended': 1}, status=200)
