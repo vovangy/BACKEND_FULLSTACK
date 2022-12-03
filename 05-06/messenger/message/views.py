@@ -20,8 +20,7 @@ def create_message(request):
     user = get_object_or_404(User, id=data["user"])
     chat = get_object_or_404(Chat, chat_id=data["chat"])
     message = Message.objects.create(message_id = len(Message.objects.all()) + 1, user = user, chat = chat, text = data["text"])
-    return JsonResponse({'Message created': 1}, status=201)
-
+    return JsonResponse({'Succes':"Message created"}, status=201)
 
 @csrf_exempt
 @require_http_methods(['POST'])
@@ -37,8 +36,7 @@ def edit_message(request):
     if "text" in data.keys():
         message.text = data["text"]
     message.save()
-    return JsonResponse({"Message edited": 1}, status=201)
-# Create your views here.
+    return JsonResponse({'Succes':"Message edited"}, status=201)
 
 @csrf_exempt
 @require_http_methods(['POST'])
@@ -50,4 +48,4 @@ def delete_message(request):
         return JsonResponse({'Error': "message_id must be digit"}, status=400)
     message = get_object_or_404(Message, message_id=data["message_id"])
     message.delete()
-    return JsonResponse({"Message removed": 1}, status=201)
+    return JsonResponse({'Succes':"Message removed"}, status=201)

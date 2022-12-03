@@ -24,7 +24,7 @@ def create_chat(request):
     if ("photo" in data.keys()):
         chat.photo = data["photo"]
     chat.users.add(user1, user2)
-    return JsonResponse({'Chat created': 1}, status=201)
+    return JsonResponse({'Succes': "Chat created"}, status=201)
 
 @csrf_exempt
 @require_http_methods(['POST'])
@@ -36,7 +36,7 @@ def delete_chat(request):
         return JsonResponse({'Error': "chat_id must be digit"}, status=400)
     chat = get_object_or_404(Chat, chat_id=data["chat_id"])
     chat.delete()
-    return JsonResponse({'Chat deleted': 1}, status=201)
+    return JsonResponse({'Succes': "Chat deleted"}, status=201)
 @require_http_methods(['GET'])
 def chat_info(request):
     data = json.loads(request.body)
@@ -80,8 +80,6 @@ def chat_messages(request):
             ))
     return JsonResponse({"Messages": result_messages})
 
-
-
 @csrf_exempt
 @require_http_methods(['POST'])
 def edit_chat(request):
@@ -98,7 +96,7 @@ def edit_chat(request):
     if "photo" in data.keys():
         chat.photo = data["photo"]
     chat.save()
-    return JsonResponse(data={"Done": "Chat has been edited"}, status=201)
+    return JsonResponse({"Succes": "Chat has been edited"}, status=201)
 
 @csrf_exempt
 @require_http_methods(['POST'])
@@ -115,7 +113,7 @@ def append_chat_user(request):
         if usr.id == usr.id:
             return JsonResponse({'Error': "Such user already exists"}, status=200)
     chat.users.add(user)
-    return JsonResponse({'User appended': 1}, status=200)
+    return JsonResponse({'Succes': "User appended"}, status=200)
 @csrf_exempt
 @require_http_methods(['POST'])
 def delete_chat_user(request):
@@ -135,4 +133,4 @@ def delete_chat_user(request):
     if flag == 0:
         return JsonResponse({'Error': "This user does not exist"}, status=400)
     chat.users.remove(user)
-    return JsonResponse({"User removed": 1}, status=201)
+    return JsonResponse({'Succes':"User removed"}, status=201)

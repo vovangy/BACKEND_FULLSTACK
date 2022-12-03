@@ -15,5 +15,4 @@ def user_info(request):
         return JsonResponse({'Error': "user_id must be digit"}, status=400)
     user = get_object_or_404(User, id=data["user_id"])
     result_user = {"username":user.username,"photo":user.photo, "birthday":user.birthday}
-    return JsonResponse({"User":result_user}, status=201)# Create your views here.
-# Create your views here.
+    return JsonResponse({"User":result_user}, status=201)
